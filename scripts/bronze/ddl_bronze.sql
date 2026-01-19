@@ -1,92 +1,63 @@
-CREATE OR ALTER PROCEDURE bronze.load_bronze AS
+IF object_id ('bronze.crm_cust_info','U') IS NOT NULL
+ DROP TABLE bronze.crm_cust_info;
+CREATE TABLE bronze.crm_cust_info (
+cst_id INT,
+cst_key NVARCHAR(50),
+cst_firstname NVARCHAR(50),
+cst_lastname NVARCHAR(50),
+cst_material_status NVARCHAR(50),
+cst_gender NVARCHAR(50),
+cst_create_date DATE
+);
 
-BEGIN
-	BEGIN TRY
-		PRINT '========================';
-		PRINT	'Loading Bronze Layer';
-		PRINT '========================';
+IF object_id ('bronze.crm_prd_info','U') IS NOT NULL
+ DROP TABLE bronze.crm_prd_info;
+CREATE TABLE bronze.crm_prd_info (
+prd_id INT,
+prd_key NVARCHAR(50),
+prd_nm NVARCHAR(50),
+prd_cost MONEY,
+prd_line NVARCHAR(50),
+prd_start_date DATE,
+prd_end_date date
+);
 
-		PRINT '-----------------------';
-		PRINT 'Loading CRM Tables';
-		PRINT '-----------------------';
+IF object_id ('bronze.crm_sales_details','U') IS NOT NULL
+ DROP TABLE bronze.crm_sales_details;
+CREATE TABLE bronze.crm_sales_details (
+sls_ord_num NVARCHAR(50),
+sls_prod_key NVARCHAR(50),
+sls_cust_id INT,
+sls_order_date int,
+sls_ship_date int,
+sls_due_date int,
+sls_sales MONEY,
+sls_quantity INT,
+sls_price MONEY
+);
 
-		PRINT '///Truncating table: bronze.crm_cust_info';
-		TRUNCATE TABLE bronze.crm_cust_info;
 
-		PRINT '>>>Inserting Data Into: bronze.crm_cust_info';
-		BULK INSERT bronze.crm_cust_info
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_crm\cust_info.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
+IF object_id ('bronze.erp_cust_az12','U') IS NOT NULL
+ DROP TABLE bronze.erp_cust_az12;
+CREATE TABLE bronze.erp_cust_az12 (
+CID NVARCHAR(50),
+BDATE DATE,
+GEN NVARCHAR (10)
+);
 
-		PRINT '///Truncating table: bronze.crm_prd_info';
-		TRUNCATE TABLE bronze.crm_prd_info;
-		PRINT '>>>Inserting Data Into: bronze.crm_prd_info';
-		BULK INSERT bronze.crm_prd_info
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_crm\prd_info.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
+IF object_id ('bronze.erp_loc_a101','U') IS NOT NULL
+ DROP TABLE bronze.erp_loc_a101;
+CREATE TABLE bronze.erp_loc_a101 (
+CID NVARCHAR(50),
+CNTRY NVARCHAR (50)
+);
 
-		PRINT '///Truncating table: bronze.crm_sales_details';
-		TRUNCATE TABLE bronze.crm_sales_details;
-		PRINT '>>>Inserting Data Into: bronze.crm_sales_details';
-		BULK INSERT bronze.crm_sales_details
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_crm\sales_details.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
 
-		PRINT '-----------------------';
-		PRINT 'Loading ERP Tables';
-		PRINT '-----------------------';
-
-		PRINT '///Truncating table: bronze.erp_cust_az12';
-		TRUNCATE TABLE bronze.erp_cust_az12;
-		PRINT '>>>Inserting Data Into: bronze.erp_cust_az12';
-		BULK INSERT bronze.erp_cust_az12
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_erp\cust_az12.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
-
-		PRINT '///Truncating table: bronze.erp_loc_a101';
-		TRUNCATE TABLE bronze.erp_loc_a101;
-		PRINT '>>>Inserting Data Into: bronze.erp_loc_a101';
-		BULK INSERT bronze.erp_loc_a101
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_erp\loc_a101.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
-
-		PRINT '///Truncating table: bronze.erp_px_cat_g1v2';
-		TRUNCATE TABLE bronze.erp_px_cat_g1v2;
-		PRINT '>>>Inserting Data Into: bronze.erp_px_cat_g1v2';
-		BULK INSERT bronze.erp_px_cat_g1v2
-		FROM 'D:\Data Warehouse\Project Baraa\Original Files\datasets\source_erp\px_cat_g1v2.csv'
-		WITH (
-		FIRSTROW = 2,
-		FIELDTERMINATOR = ',',
-		TABLOCK
-		);
-	END TRY
-	BEGIN CATCH
-	 PRINT '=================================================================';
-	 PRINT 'Error Occurred During Loading Bronze Layer';
-	 PRINT 'Error Message '+ERROR_MESSAGE();
-	 PRINT 'Error Message '+ CAST(ERROR_NUMBER() AS NVARCHAR);
-	 PRINT 'Error Message '+ CAST(ERROR_STATE() AS nvarchar);
-	 PRINT '=================================================================';
-END	CATCH
-END
+IF object_id ('bronze.erp_px_cat_g1v2','U') IS NOT NULL
+ DROP TABLE bronze.erp_px_cat_g1v2;
+CREATE TABLE bronze.erp_px_cat_g1v2 (
+ID NVARCHAR(50),
+CAT NVARCHAR (50),
+SUBCAT NVARCHAR(50),
+MAINTENANCE NVARCHAR (50)
+);
